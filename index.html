@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thirumathi Kart</title>
+  <style>
+    :root {
+      --primary: #ec407a;
+      --primary-soft: #ffe4f0;
+      --accent: #f48fb1;
+      --dark: #1f2933;
+      --muted: #6b7280;
+      --bg: #ffffff;
+      --card-bg: #ffffff;
+      --border-subtle: #f3e5f5;
+      --radius-lg: 16px;
+      --radius-full: 999px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
+      --shadow-subtle: 0 6px 20px rgba(15, 23, 42, 0.06);
+      --nav-height: 72px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #ffffff;
+      color: var(--dark);
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Layout Utils */
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    section {
+      padding: 5rem 0;
+      scroll-margin-top: calc(var(--nav-height) + 24px);
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(233, 30, 99, 0.06);
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .section-subtitle {
+      max-width: 520px;
+      margin: 0.35rem auto 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    /* Navbar */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to bottom, rgba(249, 250, 251, 0.96), rgba(249, 250, 251, 0.88));
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 18px;
+      background: conic-gradient(from 160deg, #e91e63, #ff9800, #f97316, #ec4899, #e91e63);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 30px rgba(248, 113, 113, 0.55);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-logo::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 14px;
+      background: radial-gradient(circle at 20% 0, rgba(255, 255, 255, 0.7) 0, transparent 40%), #fef2f7;
+    }
+
+    .brand-logo span {
+      position: relative;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.09em;
+      color: #be123c;
+    }
+
+    .brand-text-title {
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      font-size: 1.4rem;
+    }
+
+    .brand-text-sub {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .nav-link {
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 500;
+      border: 1px solid transparent;
+      transition: all 0.18s ease-out;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: #111827;
+      border-color: rgba(148, 163, 184, 0.22);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 10px 28px rgba(148, 163, 184, 0.32);
+      transform: translateY(-1px);
+    }
+
+    .nav-cta {
+      padding: 0.45rem 1.1rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #e11d48, #f97316);
+      color: white;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(248, 113, 113, 0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .nav-cta span {
+      display: inline-block;
+      transform: translateY(1px);
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 38px rgba(248, 113, 113, 0.8);
+    }
+
+    .nav-toggle {
+      display: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(255, 255, 255, 0.8);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-toggle-line {
+      width: 16px;
+      height: 2px;
+      background: #111827;
+      border-radius: 999px;
+      position: relative;
+    }
+
+    .nav-toggle-line::before,
+    .nav-toggle-line::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 16px;
+      height: 2px;
+      border-radius: inherit;
+      background: inherit;
+    }
+
+    .nav-toggle-line::before {
+      top: -5px;
+    }
+
+    .nav-toggle-line::after {
+      top: 5px;
+    }
+
+    /* Hero */
+    main {
+      padding-top: calc(var(--nav-height) + 18px);
+    }
+
+    #home {
+      padding-top: 3.5rem;
+      padding-bottom: 5.5rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.05);
+      color: #047857;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 1.35rem;
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 3.6vw + 1.5rem, 3.7rem);
+      line-height: 1.05;
+      letter-spacing: -0.05em;
+      margin-bottom: 0.9rem;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(120deg, #e11d48, #f97316);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin-bottom: 2rem;
+      color: #4b5563;
+      font-size: 0.92rem;
+    }
+
+    .hero-meta-badge {
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.8rem 1.6rem;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #e11d48, #f97316);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.96rem;
+      cursor: pointer;
+      box-shadow: 0 18px 40px rgba(248, 113, 113, 0.7);
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px) translateX(1px);
+      box-shadow: 0 22px 54px rgba(248, 113, 113, 0.85);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.78rem 1.3rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(255, 255, 255, 0.95);
+      color: #111827;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .btn-ghost:hover {
+      background: #f9fafb;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .hero-right {
+      position: relative;
+    }
+
+    .hero-card {
+      position: relative;
+      border-radius: 24px;
+      padding: 1.6rem 1.7rem;
+      background: radial-gradient(circle at top left, #fee2e2 0, #fef2f2 32%, #f5f3ff 70%, #eff6ff 100%);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .hero-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .hero-logo-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 24px;
+      background: radial-gradient(circle at 20% 0, rgba(255, 255, 255, 0.88) 0, rgba(255, 255, 255, 0.1) 40%), conic-gradient(from 160deg, #e11d48, #f97316, #fb7185, #e11d48);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 18px 35px rgba(248, 113, 113, 0.7);
+    }
+
+    .hero-logo-circle span {
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #be123c;
+      letter-spacing: -0.07em;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+    }
+
+    .hero-logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .hero-logo-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-logo-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-stat-pill {
+      border-radius: 16px;
+      padding: 0.75rem 0.9rem;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(248, 113, 113, 0.25);
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .hero-stat-label {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .hero-stat-value {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .hero-stat-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.1rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.09);
+      color: #047857;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .hero-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1.5rem;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    .hero-avatars {
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 2px solid #fef2f2;
+      background: linear-gradient(135deg, #f97316, #ec4899);
+      box-shadow: 0 8px 20px rgba(248, 113, 113, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .hero-avatar + .hero-avatar {
+      margin-left: -10px;
+    }
+
+    .hero-badge {
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.07);
+      color: #1d4ed8;
+      font-weight: 600;
+      font-size: 0.74rem;
+    }
+
+    .hero-glow {
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at 10% -10%, rgba(236, 72, 153, 0.35), transparent 55%),
+        radial-gradient(circle at 90% 110%, rgba(245, 158, 11, 0.35), transparent 55%);
+      opacity: 0.8;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    /* About */
+    .about-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 2.6rem;
+      align-items: start;
+    }
+
+    .about-card {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 22px;
+      padding: 1.9rem 2rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(209, 213, 219, 0.9);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.4rem;
+      margin-top: 1.6rem;
+    }
+
+    .about-pill {
+      padding: 0.9rem 1rem;
+      border-radius: 18px;
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      background: rgba(249, 250, 251, 0.9);
+      font-size: 0.9rem;
+      color: #374151;
+    }
+
+    .about-highlight {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .about-side {
+      border-radius: 22px;
+      padding: 1.5rem 1.7rem;
+      border: 1px dashed rgba(148, 163, 184, 0.9);
+      background: linear-gradient(135deg, rgba(254, 242, 242, 0.95), rgba(239, 246, 255, 0.95));
+    }
+
+    .about-side-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+      display: grid;
+      gap: 0.65rem;
+      font-size: 0.9rem;
+      color: #374151;
+    }
+
+    .about-side-list li::before {
+      content: "•";
+      color: var(--primary);
+      font-weight: 700;
+      display: inline-block;
+      width: 1rem;
+      margin-left: -1rem;
+    }
+
+    /* Products */
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.6rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 14px 35px rgba(15, 23, 42, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      transform-origin: center;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out, background 0.18s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(248, 113, 113, 0.14), transparent 60%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-out;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) translateZ(0);
+      box-shadow: 0 22px 55px rgba(15, 23, 42, 0.18);
+      border-color: rgba(248, 113, 113, 0.7);
+      background: #ffffff;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.05rem;
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .card-sub {
+      font-size: 0.87rem;
+      color: var(--muted);
+    }
+
+    .product-img {
+      border-radius: 16px;
+      height: 140px;
+      background-size: cover;
+      background-position: center;
+      margin-bottom: 0.9rem;
+    }
+
+    .product-meta {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    /* App Section */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.6rem;
+    }
+
+    .app-card-link {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .app-card {
+      cursor: pointer;
+      position: relative;
+    }
+
+    .app-card-badge {
+      position: absolute;
+      top: 1.1rem;
+      right: 1.1rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.1);
+      color: #047857;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .app-card .card-icon {
+      background: rgba(59, 130, 246, 0.07);
+      color: #1d4ed8;
+    }
+
+    .app-card:hover .card-icon {
+      transform: scale(1.04);
+      box-shadow: 0 10px 24px rgba(59, 130, 246, 0.28);
+    }
+
+    /* Tech Stack */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.3rem;
+    }
+
+    .tech-card {
+      padding: 1rem 1.2rem;
+      border-radius: 1rem;
+      border: 1px solid rgba(209, 213, 219, 0.7);
+      background: rgba(255, 255, 255, 0.96);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.92rem;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.04);
+      transform-origin: center;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out;
+    }
+
+    .tech-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+      border-color: rgba(59, 130, 246, 0.7);
+    }
+
+    .tech-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #0f172a;
+      background: radial-gradient(circle at 20% 0, rgba(255, 255, 255, 0.9) 0, rgba(255, 255, 255, 0.18) 40%), #e5e7eb;
+    }
+
+    .tech-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.05rem;
+    }
+
+    .tech-name {
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .tech-tagline {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* Team */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.8rem;
+    }
+
+    .team-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      background: radial-gradient(circle at top, #fee2e2 0, #fef2f2 36%, #eff6ff 90%);
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+      transform-origin: center;
+      transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, border-color 0.2s ease-out;
+    }
+
+    .team-card:hover {
+      transform: translateY(-10px) rotate(-0.5deg);
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.35);
+      border-color: rgba(236, 72, 153, 0.9);
+    }
+
+    .team-photo {
+      position: relative;
+      padding: 1.4rem 1.4rem 0.8rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .team-photo-inner {
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 3px solid rgba(248, 250, 252, 0.95);
+      box-shadow: 0 16px 42px rgba(15, 23, 42, 0.35);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .team-photo-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .team-info {
+      padding: 0 1.6rem 1.6rem;
+    }
+
+    .team-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.15rem;
+    }
+
+    .team-role {
+      font-size: 0.82rem;
+      color: #6b7280;
+      margin-bottom: 0.65rem;
+    }
+
+    .team-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #374151;
+    }
+
+    .team-highlight {
+      margin-top: 0.85rem;
+      font-size: 0.8rem;
+      padding: 0.45rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.08);
+      color: #1d4ed8;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .team-gradient {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at -10% 0, rgba(236, 72, 153, 0.3), transparent 55%),
+        radial-gradient(circle at 110% 100%, rgba(245, 158, 11, 0.25), transparent 45%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-out;
+      mix-blend-mode: soft-light;
+    }
+
+    .team-card:hover .team-gradient {
+      opacity: 1;
+    }
+
+    /* Contact */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 2.4rem;
+      align-items: start;
+    }
+
+    .contact-form {
+      background: rgba(255, 255, 255, 0.97);
+      padding: 1.9rem 2rem;
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(209, 213, 219, 0.85);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      padding: 0.7rem 0.9rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: rgba(249, 250, 251, 0.95);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      resize: vertical;
+      min-height: 44px;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      background: #ffffff;
+      border-color: rgba(59, 130, 246, 0.9);
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35);
+    }
+
+    textarea {
+      min-height: 120px;
+    }
+
+    .contact-meta {
+      border-radius: 20px;
+      padding: 1.8rem 1.9rem;
+      border: 1px dashed rgba(148, 163, 184, 0.9);
+      background: linear-gradient(135deg, rgba(239, 246, 255, 0.96), rgba(254, 242, 242, 0.97));
+      font-size: 0.9rem;
+      color: #374151;
+    }
+
+    .contact-meta h3 {
+      font-size: 1.05rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .contact-list {
+      list-style: none;
+      margin-top: 0.85rem;
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .contact-label {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .contact-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.07);
+      color: #047857;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(209, 213, 219, 0.9);
+      padding: 1.4rem 0 2rem;
+      margin-top: 2rem;
+      font-size: 0.86rem;
+      color: #6b7280;
+      background: rgba(249, 250, 251, 0.9);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-right {
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .hero-grid,
+      .about-layout,
+      .contact-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero-grid {
+        gap: 2.8rem;
+      }
+
+      .hero-right {
+        order: -1;
+      }
+
+      .grid-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .app-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .tech-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .team-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        height: auto;
+      }
+
+      main {
+        padding-top: calc(var(--nav-height) + 12px);
+      }
+
+      .nav-inner {
+        padding: 0.6rem 0;
+      }
+
+      nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0.7rem 1.5rem 0.75rem;
+        background: rgba(249, 250, 251, 0.98);
+        border-bottom: 1px solid rgba(209, 213, 219, 0.9);
+      }
+
+      nav.open {
+        display: flex;
+      }
+
+      .nav-link {
+        width: 100%;
+        padding: 0.5rem 0.85rem;
+      }
+
+      .nav-cta {
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.3rem;
+      }
+
+      .brand-text-sub {
+        display: none;
+      }
+
+      .nav-toggle {
+        display: inline-flex;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 0 1.1rem;
+      }
+
+      section {
+        padding: 4rem 0;
+      }
+
+      #home {
+        padding-top: 3rem;
+      }
+
+      .hero-title {
+        font-size: 2.25rem;
+      }
+
+      .hero-card {
+        padding: 1.3rem 1.3rem 1.4rem;
+      }
+
+      .hero-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-cards,
+      .app-grid,
+      .tech-grid,
+      .team-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .form-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true">
+          <span>TK</span>
+        </div>
+        <div>
+          <div class="brand-text-title">Thirumathi Kart</div>
+          <div class="brand-text-sub">Women-first commerce · Trichy</div>
+        </div>
+      </div>
+      <nav id="navMenu" aria-label="Main navigation">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#about" class="nav-link">About Us</a>
+        <a href="#products" class="nav-link">Products</a>
+        <a href="#app" class="nav-link">App</a>
+        <a href="#tech" class="nav-link">Tech Stack</a>
+        <a href="#team" class="nav-link">Team</a>
+        <a href="#contact" class="nav-link">Contact Us</a>
+        <button class="nav-cta" id="navProductsBtn" type="button">
+          Explore Products
+          <span>→</span>
+        </button>
+      </nav>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <div class="nav-toggle-line"></div>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Home / Hero -->
+    <section id="home" aria-labelledby="home-title">
+      <div class="container hero-grid">
+        <div>
+          <div class="hero-kicker">
+            <span>Built in NIT Trichy</span>
+          </div>
+          <h1 class="hero-title" id="home-title">
+            Thirumathi <span class="hero-highlight">Kart</span>
+          </h1>
+          <p class="hero-subtitle">
+            An e-commerce platform empowering women in Trichy to bring local groceries, fresh produce, home-made foods and handcrafted products straight to your doorstep.
+          </p>
+          <div class="hero-meta">
+            <span class="hero-meta-badge">By NIT Trichy students</span>
+            <span>Supporting women-led businesses and self-help groups.</span>
+          </div>
+          <div class="hero-actions">
+            <button class="btn-primary" type="button" id="heroProductsBtn">
+              Browse Products
+              <span>↓</span>
+            </button>
+            <button class="btn-ghost" type="button" id="heroAppBtn">
+              Get the TKart App
+              <span>⟶</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="hero-right" aria-hidden="true">
+          <div class="hero-card">
+            <div class="hero-glow"></div>
+            <div class="hero-card-header">
+              <div class="hero-logo">
+                <div class="hero-logo-circle">
+                  <span>TK</span>
+                </div>
+                <div class="hero-logo-text">
+                  <span class="hero-logo-title">Thirumathi Kart</span>
+                  <span class="hero-logo-sub">Women-powered · Trichy</span>
+                </div>
+              </div>
+              <span class="hero-badge">Hyperlocal e‑commerce</span>
+            </div>
+
+            <div class="hero-stats">
+              <div class="hero-stat-pill">
+                <span class="hero-stat-label">Women sellers</span>
+                <span class="hero-stat-value">100+</span>
+                <span class="hero-stat-badge">Local entrepreneurs</span>
+              </div>
+              <div class="hero-stat-pill">
+                <span class="hero-stat-label">Neighbourhood orders</span>
+                <span class="hero-stat-value">5K+</span>
+                <span class="hero-stat-badge">Across Trichy</span>
+              </div>
+              <div class="hero-stat-pill">
+                <span class="hero-stat-label">Student‑built</span>
+                <span class="hero-stat-value">NIT‑T</span>
+                <span class="hero-stat-badge">Tech + impact</span>
+              </div>
+            </div>
+
+            <div class="hero-bottom">
+              <div>
+                <div class="hero-avatars">
+                  <div class="hero-avatar">N</div>
+                  <div class="hero-avatar">I</div>
+                  <div class="hero-avatar">T</div>
+                </div>
+                <p style="margin-top: 0.35rem;">Designed and engineered by NIT Trichy students to uplift women entrepreneurs.</p>
+              </div>
+              <div>
+                <p><strong>Order local.</strong> Empower local women. Experience Trichy in every basket.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" aria-labelledby="about-title">
+      <div class="container">
+        <div class="section-heading">
+          <div class="section-pill">About Thirumathi Kart</div>
+          <h2 class="section-title" id="about-title">Where Trichy&rsquo;s women meet modern commerce</h2>
+          <p class="section-subtitle">
+            Thirumathi Kart is a women-first digital marketplace crafted in collaboration with NIT Trichy to bring neighbourhood businesses online.
+          </p>
+        </div>
+
+        <div class="about-layout">
+          <article class="about-card">
+            <p>
+              Thirumathi Kart is an end-to-end e-commerce platform dedicated to women entrepreneurs in and around Trichy. From
+              home-based vendors and self-help groups to small neighbourhood stores, the platform makes it simple for women to
+              list products, manage inventory and fulfil orders digitally.
+            </p>
+            <p style="margin-top: 0.9rem;">
+              Built by a team of <span class="about-highlight">NIT Trichy students</span>, the project combines thoughtful user experience with a
+              robust technology stack to create reliable income channels and greater visibility for women-led businesses.
+            </p>
+
+            <div class="about-grid">
+              <div class="about-pill">
+                Simple onboarding, vernacular touchpoints and assisted setup to help first-time digital entrepreneurs feel at home.
+              </div>
+              <div class="about-pill">
+                Hyperlocal delivery model that keeps logistics lean while ensuring fresh groceries, produce and home‑made foods.
+              </div>
+              <div class="about-pill">
+                Integrated buyer, seller and delivery apps that keep every stakeholder informed in real time.
+              </div>
+              <div class="about-pill">
+                Co-created with mentors and faculty at NIT Trichy to align technology innovation with social impact.
+              </div>
+            </div>
+          </article>
+
+          <aside class="about-side">
+            <h3 style="font-size: 1.05rem; margin-bottom: 0.4rem;">How Thirumathi Kart supports women</h3>
+            <p>
+              Beyond transactions, Thirumathi Kart is a digital bridge that connects women-led businesses in Trichy to families, offices and hostels across the city.
+            </p>
+            <ul class="about-side-list">
+              <li>Gives visibility to local brands, self-help groups and home kitchens.</li>
+              <li>Reduces operational friction with easy order, payment and delivery flows.</li>
+              <li>Encourages financial independence and flexible work opportunities.</li>
+              <li>Acts as a living lab for NIT Trichy students to apply engineering for societal good.</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products -->
+    <section id="products" aria-labelledby="products-title">
+      <div class="container">
+        <div class="section-heading">
+          <div class="section-pill">Products on Thirumathi Kart</div>
+          <h2 class="section-title" id="products-title">Everything your Trichy home needs</h2>
+          <p class="section-subtitle">
+            A curated selection of daily essentials and speciality items, sourced directly from women-led businesses across the city.
+          </p>
+        </div>
+
+        <div class="grid-cards" role="list">
+          <article class="card" role="listitem">
+            <div class="product-img" style="background-image: url('https://images.pexels.com/photos/4057758/pexels-photo-4057758.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-title">Groceries</div>
+            <p class="card-sub">
+              Rice, pulses, oils, spices and everyday pantry essentials from trusted neighbourhood stores.
+            </p>
+            <p class="product-meta">Picked and packed by women-run kirana outlets.</p>
+          </article>
+
+          <article class="card" role="listitem">
+            <div class="product-img" style="background-image: url('https://images.pexels.com/photos/4109727/pexels-photo-4109727.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-title">Perishable Items</div>
+            <p class="card-sub">
+              Dairy, eggs and other perishables with tight delivery windows to keep things fresh.
+            </p>
+            <p class="product-meta">Cold-chain aware delivery slots for your comfort.</p>
+          </article>
+
+          <article class="card" role="listitem">
+            <div class="product-img" style="background-image: url('https://images.pexels.com/photos/6157044/pexels-photo-6157044.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-title">Fruits</div>
+            <p class="card-sub">
+              Seasonal fruits directly from local vendors and small farms around Trichy.
+            </p>
+            <p class="product-meta">Hand‑picked, ripeness‑checked and quickly dispatched.</p>
+          </article>
+
+          <article class="card" role="listitem">
+            <div class="product-img" style="background-image: url('https://images.pexels.com/photos/6167322/pexels-photo-6167322.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-title">Vegetables</div>
+            <p class="card-sub">
+              Farm-fresh vegetables from morning markets to hostel kitchens and homes.
+            </p>
+            <p class="product-meta">Short supply routes to preserve freshness.</p>
+          </article>
+
+          <article class="card" role="listitem">
+            <div class="product-img" style="background-image: url('https://images.pexels.com/photos/4109993/pexels-photo-4109993.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-title">Homemade Foods</div>
+            <p class="card-sub">
+              Pickles, podis, snacks and tiffin prepared by home chefs and women&rsquo;s collectives.
+            </p>
+            <p class="product-meta">Comfort food rooted in Trichy&rsquo;s flavours.</p>
+          </article>
+
+          <article class="card" role="listitem">
+            <div class="product-img" style="background-image: url('https://images.pexels.com/photos/3738086/pexels-photo-3738086.jpeg?auto=compress&cs=tinysrgb&w=800');"></div>
+            <div class="card-title">Handcrafted Products</div>
+            <p class="card-sub">
+              Handcrafted decor, accessories and utility items made by women artisans.
+            </p>
+            <p class="product-meta">Every purchase carries a local story.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- App -->
+    <section id="app" aria-labelledby="app-title">
+      <div class="container">
+        <div class="section-heading">
+          <div class="section-pill">TKart Apps</div>
+          <h2 class="section-title" id="app-title">Three apps. One connected marketplace.</h2>
+          <p class="section-subtitle">
+            Dedicated Android apps for buyers, sellers and delivery partners working together to keep every order moving smoothly.
+          </p>
+        </div>
+
+        <div class="app-grid">
+          <a class="app-card-link" href="TKart-Buyer-APK-PLACEHOLDER.apk" download>
+            <article class="card app-card">
+              <div class="app-card-badge">APK</div>
+              <div class="card-icon">B</div>
+              <h3 class="card-title">TKart Buyer</h3>
+              <p class="card-sub">
+                Browse products, track orders and reorder favourites from women-led stores across Trichy.
+              </p>
+            </article>
+          </a>
+
+          <a class="app-card-link" href="TKart-Seller-APK-PLACEHOLDER.apk" download>
+            <article class="card app-card">
+              <div class="app-card-badge">APK</div>
+              <div class="card-icon">S</div>
+              <h3 class="card-title">TKart Seller</h3>
+              <p class="card-sub">
+                Manage catalogues, pricing and order fulfilment with an interface designed for first-time sellers.
+              </p>
+            </article>
+          </a>
+
+          <a class="app-card-link" href="TKart-Delivery-APK-PLACEHOLDER.apk" download>
+            <article class="card app-card">
+              <div class="app-card-badge">APK</div>
+              <div class="card-icon">D</div>
+              <h3 class="card-title">TKart Delivery</h3>
+              <p class="card-sub">
+                Optimised routes, live order updates and clear payouts for delivery partners across the city.
+              </p>
+            </article>
+          </a>
+        </div>
+
+        <p style="margin-top: 1.3rem; font-size: 0.85rem; color: #6b7280;">
+          Replace the <strong>APK placeholder links</strong> above with the actual file URLs when your Android builds are ready.
+        </p>
+      </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section id="tech" aria-labelledby="tech-title">
+      <div class="container">
+        <div class="section-heading">
+          <div class="section-pill">Tech Stack</div>
+          <h2 class="section-title" id="tech-title">Modern stack for real-world reliability</h2>
+          <p class="section-subtitle">
+            Thirumathi Kart is powered by production-ready technologies designed to scale with Trichy&rsquo;s entrepreneurial energy.
+          </p>
+        </div>
+
+        <div class="tech-grid">
+          <div class="tech-card">
+            <div class="tech-logo" style="background: radial-gradient(circle at 20% 0, #ffffff 0, #bfdbfe 45%);">
+              R
+            </div>
+            <div class="tech-meta">
+              <span class="tech-name">React</span>
+              <span class="tech-tagline">Dynamic web &amp; app interfaces</span>
+            </div>
+          </div>
+
+          <div class="tech-card">
+            <div class="tech-logo" style="background: radial-gradient(circle at 20% 0, #ffffff 0, #fed7e2 45%);">
+              K
+            </div>
+            <div class="tech-meta">
+              <span class="tech-name">Kafka</span>
+              <span class="tech-tagline">Event streams for real‑time orders</span>
+            </div>
+          </div>
+
+          <div class="tech-card">
+            <div class="tech-logo" style="background: radial-gradient(circle at 20% 0, #ffffff 0, #bbf7d0 45%);">
+              Go
+            </div>
+            <div class="tech-meta">
+              <span class="tech-name">Go</span>
+              <span class="tech-tagline">High‑performance backend services</span>
+            </div>
+          </div>
+
+          <div class="tech-card">
+            <div class="tech-logo" style="background: radial-gradient(circle at 20% 0, #ffffff 0, #c7d2fe 45%);">
+              Pg
+            </div>
+            <div class="tech-meta">
+              <span class="tech-name">PostgreSQL</span>
+              <span class="tech-tagline">Reliable relational data backbone</span>
+            </div>
+          </div>
+
+          <div class="tech-card">
+            <div class="tech-logo" style="background: radial-gradient(circle at 20% 0, #ffffff 0, #fee2e2 45%);">
+              Fb
+            </div>
+            <div class="tech-meta">
+              <span class="tech-name">Firebase</span>
+              <span class="tech-tagline">Auth &amp; real‑time updates</span>
+            </div>
+          </div>
+
+          <div class="tech-card">
+            <div class="tech-logo" style="background: radial-gradient(circle at 20% 0, #ffffff 0, #e5e7eb 45%);">
+              ES
+            </div>
+            <div class="tech-meta">
+              <span class="tech-name">Elasticsearch</span>
+              <span class="tech-tagline">Fast search for products</span>
+            </div>
+          </div>
+
+          <div class="tech-card">
+            <div class="tech-logo" style="background: radial-gradient(circle at 20% 0, #ffffff 0, #d1fae5 45%);">
+              D
+            </div>
+            <div class="tech-meta">
+              <span class="tech-name">Docker</span>
+              <span class="tech-tagline">Portable, reproducible deployments</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team -->
+    <section id="team" aria-labelledby="team-title">
+      <div class="container">
+        <div class="section-heading">
+          <div class="section-pill">Team</div>
+          <h2 class="section-title" id="team-title">The NIT Trichy builders</h2>
+          <p class="section-subtitle">
+            A small, focused student team from NIT Trichy combining design, engineering and empathy for local communities.
+          </p>
+        </div>
+
+        <div class="team-grid">
+          <article class="team-card">
+            <div class="team-gradient"></div>
+            <div class="team-photo">
+              <div class="team-photo-inner" style="background-image: url('https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=600');"></div>
+            </div>
+            <div class="team-info">
+              <h3 class="team-name">Ananya Rao</h3>
+              <div class="team-role">Age 21 · B.Tech CSE</div>
+              <div class="team-meta">
+                <span>Product &amp; Frontend</span>
+                <span>NIT Trichy</span>
+              </div>
+              <div class="team-highlight">
+                <span>Designs flows that are friendly for first-time smartphone users.</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="team-card">
+            <div class="team-gradient"></div>
+            <div class="team-photo">
+              <div class="team-photo-inner" style="background-image: url('https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=600');"></div>
+            </div>
+            <div class="team-info">
+              <h3 class="team-name">Rahul Menon</h3>
+              <div class="team-role">Age 22 · B.Tech ECE</div>
+              <div class="team-meta">
+                <span>Backend &amp; Infrastructure</span>
+                <span>NIT Trichy</span>
+              </div>
+              <div class="team-highlight">
+                <span>Owns Go services, Kafka pipelines and Dockerised deployments.</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="team-card">
+            <div class="team-gradient"></div>
+            <div class="team-photo">
+              <div class="team-photo-inner" style="background-image: url('https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=600');"></div>
+            </div>
+            <div class="team-info">
+              <h3 class="team-name">Meera Subramanian</h3>
+              <div class="team-role">Age 21 · B.Tech ICE</div>
+              <div class="team-meta">
+                <span>Mobile &amp; Operations</span>
+                <span>NIT Trichy</span>
+              </div>
+              <div class="team-highlight">
+                <span>Bridges between sellers, buyers and delivery partners on‑ground.</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="section-heading">
+          <div class="section-pill">Contact Us</div>
+          <h2 class="section-title" id="contact-title">Let&rsquo;s build with Trichy&rsquo;s women</h2>
+          <p class="section-subtitle">
+            Reach out for collaborations, campus partnerships or to onboard new women-led businesses onto Thirumathi Kart.
+          </p>
+        </div>
+
+        <div class="contact-grid">
+          <form class="contact-form" id="contactForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required />
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Share how you&rsquo;d like to collaborate or support the initiative" required></textarea>
+            </div>
+            <button class="btn-primary" type="submit" style="margin-top: 0.4rem;">
+              Submit message
+              <span>→</span>
+            </button>
+            <p id="formStatus" style="margin-top: 0.7rem; font-size: 0.85rem; color: #16a34a; display: none;">
+              Thank you! Your message has been captured locally.
+            </p>
+          </form>
+
+          <aside class="contact-meta">
+            <h3>Based out of NIT Trichy</h3>
+            <p>
+              Thirumathi Kart is incubated within the campus ecosystem of National Institute of Technology, Tiruchirappalli, with support from mentors, faculty and local partners.
+            </p>
+            <ul class="contact-list">
+              <li>
+                <span class="contact-label">Location:</span>
+                NIT Trichy, Tiruchirappalli, Tamil Nadu, India
+              </li>
+              <li>
+                <span class="contact-label">Email:</span>
+                contact@thirumathikart.example
+              </li>
+              <li>
+                <span class="contact-label">Phone:</span>
+                +91-99999-00000
+              </li>
+            </ul>
+            <div class="contact-pill">
+              <span>Open to pilots with NGOs, SHGs and local institutions in and around Trichy.</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>© 2026 Thirumathi Kart | Built by NIT Trichy Students.</div>
+      <div class="footer-right">Concept, design &amp; implementation by the TKart student team.</div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const navToggle = document.getElementById("navToggle");
+      const navMenu = document.getElementById("navMenu");
+      const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+      const heroProductsBtn = document.getElementById("heroProductsBtn");
+      const heroAppBtn = document.getElementById("heroAppBtn");
+      const navProductsBtn = document.getElementById("navProductsBtn");
+      const sections = Array.from(document.querySelectorAll("main section[id]"));
+      const contactForm = document.getElementById("contactForm");
+      const formStatus = document.getElementById("formStatus");
+
+      function scrollToId(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const navHeight = document.querySelector("header").offsetHeight || 0;
+        const rect = el.getBoundingClientRect();
+        const offset = window.pageYOffset + rect.top - (navHeight + 16);
+        window.scrollTo({
+          top: offset,
+          behavior: "smooth",
+        });
+      }
+
+      navToggle.addEventListener("click", function () {
+        navMenu.classList.toggle("open");
+      });
+
+      navLinks.forEach(function (link) {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          const href = link.getAttribute("href") || "";
+          const id = href.replace("#", "");
+          scrollToId(id);
+          navMenu.classList.remove("open");
+        });
+      });
+
+      if (heroProductsBtn) {
+        heroProductsBtn.addEventListener("click", function () {
+          scrollToId("products");
+        });
+      }
+
+      if (navProductsBtn) {
+        navProductsBtn.addEventListener("click", function () {
+          scrollToId("products");
+          navMenu.classList.remove("open");
+        });
+      }
+
+      if (heroAppBtn) {
+        heroAppBtn.addEventListener("click", function () {
+          scrollToId("app");
+        });
+      }
+
+      // Scroll spy to highlight active nav link
+      let scrollTimeout;
+      window.addEventListener("scroll", function () {
+        if (scrollTimeout) {
+          window.cancelAnimationFrame(scrollTimeout);
+        }
+        scrollTimeout = window.requestAnimationFrame(function () {
+          const scrollPosition = window.pageYOffset;
+          const navHeight = document.querySelector("header").offsetHeight || 0;
+
+          let currentId = "home";
+          sections.forEach(function (section) {
+            const rect = section.getBoundingClientRect();
+            const offsetTop = rect.top + window.pageYOffset - navHeight - 32;
+            if (scrollPosition >= offsetTop) {
+              currentId = section.id;
+            }
+          });
+
+          navLinks.forEach(function (link) {
+            const href = link.getAttribute("href") || "";
+            const id = href.replace("#", "");
+            if (id === currentId) {
+              link.classList.add("active");
+            } else {
+              link.classList.remove("active");
+            }
+          });
+        });
+      });
+
+      // Contact form – demo only
+      if (contactForm) {
+        contactForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          if (formStatus) {
+            formStatus.style.display = "block";
+          }
+          contactForm.reset();
+          window.setTimeout(function () {
+            if (formStatus) {
+              formStatus.style.display = "none";
+            }
+          }, 4000);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
+
